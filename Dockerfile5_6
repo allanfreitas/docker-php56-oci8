@@ -5,6 +5,13 @@ FROM php:5.6.32-fpm
 #RUN sed -i '/deb http:\/\/deb.debian.org\/debian jessie-updates main/d' /etc/apt/sources.list
 #RUN apt-get -o Acquire::Check-Valid-Until=false update
 
+ARG UNAME=www-data
+ARG UGROUP=www-data
+ARG UID=1000
+ARG GID=1000
+RUN usermod  --uid $UID $UNAME
+RUN groupmod --gid $GID $UGROUP
+
 COPY packages/libcurl3-gnutls_7.38.0-4+deb8u11_amd64.deb /tmp/
 COPY packages/apt-transport-https_1.0.9.8.4_amd64.deb /tmp/
 COPY packages/ca-certificates_20141019+deb8u3_all.deb /tmp/
