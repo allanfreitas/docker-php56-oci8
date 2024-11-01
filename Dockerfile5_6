@@ -1,0 +1,122 @@
+FROM php:5.6.32-fpm
+
+#RUN echo "deb [check-valid-until=no] http://cdn-fastly.deb.debian.org/debian jessie main" > /etc/apt/sources.list.d/jessie.list
+#RUN echo "deb [check-valid-until=no] http://archive.debian.org/debian jessie-backports main" > /etc/apt/sources.list.d/jessie-backports.list
+#RUN sed -i '/deb http:\/\/deb.debian.org\/debian jessie-updates main/d' /etc/apt/sources.list
+#RUN apt-get -o Acquire::Check-Valid-Until=false update
+
+COPY packages/libcurl3-gnutls_7.38.0-4+deb8u11_amd64.deb /tmp/
+COPY packages/apt-transport-https_1.0.9.8.4_amd64.deb /tmp/
+COPY packages/ca-certificates_20141019+deb8u3_all.deb /tmp/
+
+COPY packages/zlib1g_1.2.11.dfsg-1+deb10u1_amd64.deb /tmp/
+COPY packages/zlib1g-dev_1.2.11.dfsg-1+deb10u1_amd64.deb /tmp/
+
+COPY packages/libexpat1_2.1.0-6+deb8u4_amd64.deb /tmp/
+COPY packages/liberror-perl_0.17027-2_all.deb /tmp/
+COPY packages/git-man_2.1.4-2.1_all.deb /tmp/
+
+COPY packages/git_2.1.4-2.1+deb8u6_amd64.deb /tmp/
+COPY packages/libaio1_0.3.110-3_amd64.deb /tmp/
+
+COPY packages/libfreetype6_2.5.2-3+deb8u2_amd64.deb /tmp
+COPY packages/libfreetype6-dev_2.5.2-3+deb8u2_amd64.deb /tmp/
+
+COPY packages/libjpeg62-turbo_1.5.1-2_amd64.deb /tmp/
+COPY packages/libjpeg62-turbo-dev_1.5.1-2_amd64.deb /tmp/
+
+COPY packages/libpng12-0_1.2.50-2+deb8u3_amd64.deb /tmp/
+COPY packages/libpng16-16_1.6.36-6_amd64.deb /tmp/
+COPY packages/libpng-dev_1.6.36-6_amd64.deb /tmp/
+
+COPY packages/unzip_6.0-16+deb8u3_amd64.deb /tmp/
+
+COPY packages/libnettle6_3.3-1+b2_amd64.deb /tmp/
+
+COPY packages/libc6_2.24-11+deb9u4_amd64.deb /tmp/
+COPY packages/libtasn1-6_4.13-3_amd64.deb /tmp/
+COPY packages/libp11-kit0_0.23.3-2_amd64.deb /tmp/
+COPY packages/libhogweed4_3.3-1+b2_amd64.deb /tmp/
+COPY packages/libgnutls30_3.5.8-5+deb9u5_amd64.deb /tmp/
+
+COPY packages/libunistring0_0.9.3-3_amd64.deb /tmp/
+COPY packages/libunistring2_0.9.10-1_amd64.deb /tmp/
+COPY packages/libidn2-0_2.0.5-1+deb10u1_amd64.deb /tmp/
+COPY packages/libpsl5_0.17.0-3_amd64.deb /tmp/
+
+COPY packages/wget_1.18-5+deb9u3_amd64.deb /tmp/
+
+# Install the .deb packages
+RUN dpkg -i \
+    /tmp/libcurl3-gnutls_7.38.0-4+deb8u11_amd64.deb \
+    /tmp/apt-transport-https_1.0.9.8.4_amd64.deb \
+    /tmp/ca-certificates_20141019+deb8u3_all.deb \
+    /tmp/zlib1g_1.2.11.dfsg-1+deb10u1_amd64.deb \
+    /tmp/zlib1g-dev_1.2.11.dfsg-1+deb10u1_amd64.deb \
+    /tmp/libnettle6_3.3-1+b2_amd64.deb \
+    /tmp/libc6_2.24-11+deb9u4_amd64.deb \
+    /tmp/libtasn1-6_4.13-3_amd64.deb \
+    /tmp/libp11-kit0_0.23.3-2_amd64.deb \
+    /tmp/libhogweed4_3.3-1+b2_amd64.deb \
+    /tmp/libgnutls30_3.5.8-5+deb9u5_amd64.deb \
+    /tmp/libunistring0_0.9.3-3_amd64.deb \
+    /tmp/libunistring2_0.9.10-1_amd64.deb \
+    /tmp/libidn2-0_2.0.5-1+deb10u1_amd64.deb \
+    /tmp/libpsl5_0.17.0-3_amd64.deb \
+    /tmp/libaio1_0.3.110-3_amd64.deb \
+    /tmp/libpng12-0_1.2.50-2+deb8u3_amd64.deb \
+    /tmp/libpng16-16_1.6.36-6_amd64.deb \
+    /tmp/libexpat1_2.1.0-6+deb8u4_amd64.deb \
+    /tmp/liberror-perl_0.17027-2_all.deb \
+    /tmp/git-man_2.1.4-2.1_all.deb \
+    /tmp/git_2.1.4-2.1+deb8u6_amd64.deb \
+    /tmp/libjpeg62-turbo_1.5.1-2_amd64.deb \
+    /tmp/libfreetype6_2.5.2-3+deb8u2_amd64.deb \
+    /tmp/libfreetype6-dev_2.5.2-3+deb8u2_amd64.deb \
+    /tmp/libjpeg62-turbo-dev_1.5.1-2_amd64.deb \
+    /tmp/libpng-dev_1.6.36-6_amd64.deb \
+    /tmp/unzip_6.0-16+deb8u3_amd64.deb \
+    /tmp/wget_1.18-5+deb9u3_amd64.deb && \
+    rm /tmp/*.deb
+
+# Update repository URLs to Debian archive
+#RUN sed -i 's/http:\/\/deb.debian.org\/debian/https:\/\/archive.debian.org\/debian/g' /etc/apt/sources.list && \
+#RUN sed -i 's|http://deb.debian.org/debian|[trusted=yes] https://archive.debian.org/debian|g' /etc/apt/sources.list && \
+#    sed -i '/security.debian.org/ s/^/#/' /etc/apt/sources.list && \
+#    echo 'Acquire::Check-Valid-Until "false";' > /etc/apt/apt.conf.d/99no-check-valid-until
+
+#RUN cat /etc/apt/sources.list
+
+#RUN apt-get -o Acquire::Check-Valid-Until=false update --allow-unauthenticated
+
+#RUN apt-get install -qqy git unzip libfreetype6-dev \
+#        libjpeg62-turbo-dev \
+#        libpng-dev \
+#        libaio1 wget && apt-get clean autoclean && apt-get autoremove --yes &&  rm -rf /var/lib/{apt,dpkg,cache,log}/ 
+#composer
+#RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
+
+# ORACLE oci 
+RUN mkdir /opt/oracle \
+    && cd /opt/oracle
+    
+ADD instantclient-basic-linux.x64-12.1.0.2.0.zip /opt/oracle
+ADD instantclient-sdk-linux.x64-12.1.0.2.0.zip /opt/oracle
+
+# Install Oracle Instantclient
+RUN  unzip /opt/oracle/instantclient-basic-linux.x64-12.1.0.2.0.zip -d /opt/oracle \
+    && unzip /opt/oracle/instantclient-sdk-linux.x64-12.1.0.2.0.zip -d /opt/oracle \
+    && ln -s /opt/oracle/instantclient_12_1/libclntsh.so.12.1 /opt/oracle/instantclient_12_1/libclntsh.so \
+    && ln -s /opt/oracle/instantclient_12_1/libclntshcore.so.12.1 /opt/oracle/instantclient_12_1/libclntshcore.so \
+    && ln -s /opt/oracle/instantclient_12_1/libocci.so.12.1 /opt/oracle/instantclient_12_1/libocci.so \
+    && rm -rf /opt/oracle/*.zip
+    
+ENV LD_LIBRARY_PATH=/opt/oracle/instantclient_12_1:$LD_LIBRARY_PATH
+    
+# Install Oracle extensions
+RUN echo 'instantclient,/opt/oracle/instantclient_12_1/' | pecl install oci8-2.0.12 \ 
+      && docker-php-ext-enable \
+               oci8 \ 
+       && docker-php-ext-configure pdo_oci --with-pdo-oci=instantclient,/opt/oracle/instantclient_12_1,12.1 \
+       && docker-php-ext-install \
+               pdo_oci 
